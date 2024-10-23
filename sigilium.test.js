@@ -30,7 +30,26 @@ describe('Sigilium', () => {
   });
 
   describe('singleton', () => {
-    it('should enforce single-provider constraint', () => {
+    it('throws errors with less than one provider', () => {
+      const unique = sigilium.singleton('unique');
+
+      container.install(unique.resolver());
+
+      expect(() => container.resolve(unique.resolve))
+        .to.throw('Expected exactly one implementation for unique');
+    });
+
+    it('provides exactly one provider', () => {
+      const unique = sigilium.singleton('unique');
+
+      container.install(unique.resolver());
+      container.install(unique.provider([], () => () => 'first'));
+
+      const fn = container.resolve(unique.resolve)[0];
+      expect(fn()).to.equal('first');
+    });
+
+    it('throws errors with more than one provider', () => {
       const unique = sigilium.singleton('unique');
       
       container.install(unique.resolver());
