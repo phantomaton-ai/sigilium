@@ -70,8 +70,8 @@ describe('Sigilium', () => {
       }));
 
       // An aggregator
-      container.install(converse.aggregator([], () => (providers) => (messages) =>
-        providers.map(provider => provider()(messages)).join(' | ')
+      container.install(converse.aggregator([], () => (impls) => (messages) =>
+        impls.map(impl => impl(messages)).join(' | ')
       ));
 
       const [converseFn] = container.resolve(converse.resolve);
