@@ -22,6 +22,21 @@ class Sigil {
   }
 }
 
+class Optional extends Sigil {
+  resolver() {
+    return {
+      symbol: this.resolve,
+      dependencies: [this.impl],
+      factory: impls => {
+        if (impls.length > 1) {
+          throw new Error(`Expected at most one implementation for ${this.name}`);
+        }
+        return impls[0];
+      }
+    };
+  }
+}
+
 class Singleton extends Sigil {
   resolver() {
     return {
@@ -74,6 +89,7 @@ class Composite extends Sigil {
 
 export default {
   sigil: name => new Sigil(name),
+  optional: name => new Optional(name),
   singleton: name => new Singleton(name),
   composite: name => new Composite(name)
 };

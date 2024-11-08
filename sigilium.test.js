@@ -61,6 +61,38 @@ describe('Sigilium', () => {
     });
   });
 
+  describe('optional', () => {
+    it('return undefined with less than one provider', () => {
+      const unique = sigilium.optional('unique');
+
+      container.install(unique.resolver());
+
+      const fn = container.resolve(unique.resolve)[0];
+      expect(fn).to.equal(undefined);
+    });
+
+    it('provides exactly one provider', () => {
+      const unique = sigilium.optional('unique');
+
+      container.install(unique.resolver());
+      container.install(unique.provider([], () => () => 'first'));
+
+      const fn = container.resolve(unique.resolve)[0];
+      expect(fn()).to.equal('first');
+    });
+
+    it('throws errors with more than one provider', () => {
+      const unique = sigilium.optional('unique');
+      
+      container.install(unique.resolver());
+      container.install(unique.provider([], () => () => 'first'));
+      container.install(unique.provider([], () => () => 'second'));
+
+      expect(() => container.resolve(unique.resolve))
+        .to.throw('Expected at most one implementation for unique');
+    });
+  });
+
   describe('composite', () => {
     it('should support providers, decorators, and aggregators', () => {
       const converse = sigilium.composite('converse');
