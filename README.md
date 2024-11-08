@@ -31,9 +31,9 @@ const log = sigilium.sigil('log');
 container.install(log.provider([], () => console.log));
 ```
 
-### Optional Extension Points ☝️
+### Optional Extension Points 🔌
 
-Create a optional extension point when you need exactly one implementation:
+Create an optional extension point when you want at-most-one implementation:
 
 ```javascript
 const logger = sigilium.optional('logger');
